@@ -1,20 +1,74 @@
-import type { Config } from 'tailwindcss'
+import type { Config } from "tailwindcss";
 
 const config: Config = {
   content: [
-    './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/components/**/*.{js,ts,jsx,tsx,mdx}',
-    './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+    "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
       backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic':
-          'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
+        "gradient-conic":
+          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+      },
+      spacing: {
+        "1/2": "50%",
+        "1/3": "33.33333%",
+        "2/3": "66.66667%",
+        "1/4": "25%",
+        "2/4": "50%",
+        "3/4": "75%",
+        "1/5": "20%",
+        "2/5": "40%",
+        "3/5": "60%",
+        "4/5": "80%",
+        "1/6": "16.66667%",
+        "2/6": "33.33333%",
+        "3/6": "50%",
+        "4/6": "66.66667%",
+        "5/6": "83.33333%",
+        "1/7": "14.28571%",
+        "2/7": "28.57143%",
+        "3/7": "42.85714%",
+        "4/7": "57.14286%",
+        "5/7": "71.42857%",
+        "6/7": "85.71429%",
+        "1/12": "8.33333%",
+        "2/12": "16.66667%",
+        "3/12": "25%",
+        "4/12": "33.33333%",
+        "5/12": "41.66667%",
+        "6/12": "50%",
+        "7/12": "58.33333%",
+        "8/12": "66.66667%",
+        "9/12": "75%",
+        "10/12": "83.33333%",
+        "11/12": "91.66667%",
+      },
+      colors: {
+        black300: "#131316",
+        white: "#FFFFFF",
+        linear: "#5C6670",
+        jade100: "#e3fcf2",
+        gray10: "#f2f4f7",
+        gray50: "#EFF1F6",
+        gray100: "#DBDEE5",
+        gray300: "#d0d5dd",
+        gray400: "#56616B",
+        black: "#101828",
+        red: "#F9E3E0",
+        orange300: "#ff5403",
+      },
+      fontSize: {
+        h1: ["2.25rem", "normal"],
+        h2: ["1.75rem", "normal"],
+        h3: ["1.5rem", "normal"],
+        body: ["16px", "normal"],
       },
     },
   },
   plugins: [],
-}
-export default config
+};
+export default config;
