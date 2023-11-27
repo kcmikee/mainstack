@@ -145,10 +145,10 @@ export const getAsync = async ({ url, data }) => {
         "content-type": "application/json",
       },
     });
-    if (response.data.status == true) {
+    if (response.status == 200) {
       if (data?.setLoader) data?.setLoader(false);
       if (data?.onComplete)
-        data?.onComplete(response.data.message, response.data.data);
+        data?.onComplete(response.data.message || "", response.data);
       if (data?.renderMessage) toast.success(response.data.message);
       return response.data.data;
     } else {

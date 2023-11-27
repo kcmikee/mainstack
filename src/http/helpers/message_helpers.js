@@ -1,5 +1,4 @@
 import { toast } from "react-toastify";
-import Swal from "sweetalert2";
 
 export const handleArrayMessage = (msg, callback = null, delimiter = "\n") => {
   if (msg === null || typeof msg === "undefined") return false;

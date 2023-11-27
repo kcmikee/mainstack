@@ -2,6 +2,41 @@
 @tailwind components;
 @tailwind utilities;
 
+*::-webkit-scrollbar {
+  display: none;
+}
+
+* {
+  box-sizing: border-box;
+}
 body {
   background: #fff;
+}
+
+@layer components {
+  .navContainer {
+    @apply flex items-center justify-between shadow-AppBar h-16 shrink-0 w-full border-2 border-white bg-white rounded-full pl-6 pr-3 py-3.5;
+  }
+  .navItem {
+    @apply flex py-2 pl-3.5 pr-[18px] gap-1 rounded-full cursor-pointer transition-colors duration-200 ease-in;
+  }
+
+  .navTitle {
+    @apply font-semibold;
+  }
+  .transactionDropdownTrigger {
+    @apply h-14 w-full bg-gray50 flex items-center justify-between px-4 rounded-lg;
+  }
+  .filtercalendar {
+    @apply -bottom-[305px] w-[412px] bg-white shadow-AppBar rounded-lg transition-all duration-700 ease-in-out;
+  }
+  .transactionDropdown1 {
+    @apply absolute -bottom-[288px] w-[412px] bg-white shadow-AppBar rounded-lg transition-all duration-1000 ease-in-out;
+  }
+  .transactionDropdown {
+    @apply absolute -bottom-[135px] w-[412px] bg-white shadow-AppBar rounded-lg transition-all duration-1000 ease-in-out;
+  }
+}
+.nameCircle {
+  background-image: linear-gradient(139deg, #5c6670 2.33%, #131316 96.28%);
 }
