@@ -15,26 +15,35 @@ body {
 
 @layer components {
   .navContainer {
-    @apply flex items-center justify-between shadow-AppBar h-16 shrink-0 w-full border-2 border-white bg-white rounded-full pl-6 pr-3 py-3.5;
+    @apply flex h-16 w-full shrink-0 items-center justify-between rounded-full border-2 border-white bg-white py-3.5 pl-6 pr-3 shadow-AppBar;
   }
   .navItem {
-    @apply flex py-2 pl-3.5 pr-[18px] gap-1 rounded-full cursor-pointer transition-colors duration-200 ease-in;
+    @apply flex cursor-pointer gap-1 rounded-full py-2 pl-3.5 pr-[18px] transition-colors duration-200 ease-in;
   }
 
   .navTitle {
     @apply font-semibold;
   }
   .transactionDropdownTrigger {
-    @apply h-14 w-full bg-gray50 flex items-center justify-between px-4 rounded-lg;
+    @apply flex h-14 w-full items-center justify-between rounded-xl bg-gray50 px-4;
   }
   .filtercalendar {
-    @apply -bottom-[305px] w-[412px] bg-white shadow-AppBar rounded-lg transition-all duration-700 ease-in-out;
+    @apply -bottom-[305px] w-[412px] rounded-lg bg-white shadow-AppBar transition-all duration-700 ease-in-out;
   }
   .transactionDropdown1 {
-    @apply absolute -bottom-[288px] w-[412px] bg-white shadow-AppBar rounded-lg transition-all duration-1000 ease-in-out;
+    @apply absolute -bottom-[288px] w-[412px] rounded-xl bg-white shadow-AppBar transition-all duration-1000 ease-in-out;
   }
   .transactionDropdown {
-    @apply absolute -bottom-[135px] w-[412px] bg-white shadow-AppBar rounded-lg transition-all duration-1000 ease-in-out;
+    @apply absolute -bottom-[135px] w-[412px] rounded-xl bg-white shadow-AppBar transition-all duration-1000 ease-in-out;
+  }
+  .checkBoxLabel {
+    @apply text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70;
+  }
+  .btnContainer {
+    @apply absolute bottom-5 left-3 mx-auto flex w-[95%] gap-3;
+  }
+  .btn {
+    @apply h-14 w-1/2 rounded-full border;
   }
 }
 .nameCircle {

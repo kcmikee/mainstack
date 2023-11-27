@@ -2,20 +2,39 @@ import React, { useEffect } from "react";
 import { FiChevronDown } from "react-icons/fi";
 import { HiOutlineDownload } from "react-icons/hi";
 import { GoArrowUpRight, GoArrowDownLeft } from "react-icons/go";
-import { useAppStore } from "@/store/appStore";
+import { filterValuesProps, useAppStore } from "@/store/appStore";
 import { useTransactionStore } from "@/store/transactionStore";
 
 function Transactions() {
   const [hydrate, setHydrate] = React.useState(true);
+  const [filtered, setFiltered] = React.useState([]);
   const isFilterOpen = useAppStore(
     (state: { isFilterOpen: Boolean }) => state.isFilterOpen,
+  );
+  const filterValues = useAppStore(
+    (state: { filterValues: filterValuesProps }) => state.filterValues,
   );
   const transactions = useTransactionStore(
     (state: { transactions: [] }) => state.transactions,
   );
+  const filteredTransactions = useAppStore(
+    (state: any) => state.filteredTransactions,
+  );
+
   const setIsFilterOpen = useAppStore(
     (state: { setIsFilterOpen: Function }) => state.setIsFilterOpen,
   );
+
+  // useEffect(() => {
+  //   if (Object.keys(filterValues).length > 0) {
+  //     // if(filterValues?.period ===){
+  //     // }
+  //   } else {
+  //     setFiltered(transactions);
+  //   }
+  // }, [filterValues, transactions]);
+
+  console.log({ transactions });
 
   useEffect(() => {
     setHydrate(false);
@@ -26,7 +45,7 @@ function Transactions() {
       <div className="flex items-center justify-between border-b pb-5">
         <div>
           <h4 className="text-h3 font-bold">
-            {transactions?.length} Transactions
+            {filteredTransactions?.length} Transactions
           </h4>
           <p className="text-sm text-gray400">
             Your transactions for the last 7 days
@@ -47,7 +66,7 @@ function Transactions() {
         </div>
       </div>
       <div className="max-h-[550px] space-y-6 overflow-scroll pt-8">
-        {transactions.map((trans, i) => (
+        {filteredTransactions.map((trans, i) => (
           <TransactionsDetail key={i} data={trans} />
         ))}
       </div>

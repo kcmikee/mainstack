@@ -8,7 +8,7 @@ import { useWalletStore } from "@/store/walletStore";
 function Balance() {
   const wallets = useWalletStore((state) => state.wallets);
   const [balances, setBalances] = React.useState([]);
-
+  const [hydrate, setHydrate] = React.useState(true);
   React.useEffect(() => {
     if (wallets?.ledger_balance) {
       const data = [
@@ -33,7 +33,10 @@ function Balance() {
       setBalances([]);
     };
   }, [wallets]);
-
+  React.useEffect(() => {
+    setHydrate(false);
+  }, []);
+  if (hydrate) return <></>;
   return (
     <div className="mt-16 flex gap-[124px]">
       <div className="w-full">

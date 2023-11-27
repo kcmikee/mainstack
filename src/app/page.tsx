@@ -16,16 +16,19 @@ import { useEffect } from "react";
 export default function Home() {
   const setLoader = useTransactionStore((state) => state.setLoader);
   const setTransactions = useTransactionStore((state) => state.setTransactions);
-
+  const setFilteredTransactions = useAppStore(
+    (state) => state.setFilteredTransactions,
+  );
   const setWalletLoader = useWalletStore((state) => state.setWalletLoader);
   const setWallets = useWalletStore((state) => state.setWallets);
 
   const setUsers = useUserStore((state) => state.setUsers);
   const setUserLoader = useUserStore((state) => state.setUserLoader);
 
-  const isFilterOpen = useAppStore(
-    (state: { isFilterOpen: Boolean }) => state.isFilterOpen,
+  const setFilterValues = useAppStore(
+    (state: { setFilterValues: Function }) => state.setFilterValues,
   );
+
   const { GetTransactions } = useGetTransactions();
   const { GetWallets } = useGetWallets();
   const { GetUsers } = useGetUsers();
@@ -35,6 +38,7 @@ export default function Home() {
       GetTransactions({
         onComplete: (_: any, data: any) => {
           setTransactions(data);
+          setFilteredTransactions(data);
         },
         setLoader,
       });
@@ -46,13 +50,13 @@ export default function Home() {
       });
       GetUsers({
         onComplete: (_: any, data: any) => {
-          console.log({ data });
           setUsers(data);
         },
         setLoader: setUserLoader,
       });
     }
     CallData();
+    setFilterValues({});
   }, []);
   return (
     <main className="relative min-h-screen w-screen p-4">

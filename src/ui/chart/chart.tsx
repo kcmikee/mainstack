@@ -1,4 +1,6 @@
 "use client";
+import { useTransactionStore } from "@/store/transactionStore";
+import React from "react";
 import {
   LineChart,
   Line,
@@ -48,8 +50,34 @@ const data = [
 ];
 
 const Chart = () => {
+  const [date, setDate] = React.useState([]);
+  const transactions = useTransactionStore(
+    (state: { transactions: any[] }) => state.transactions,
+  );
+  const [data, setData] = React.useState([]);
+  React.useEffect(() => {
+    if (transactions.length) {
+      const newArr = transactions.map((trans: any) => {
+        return {
+          name: new Date(trans?.date).toDateString(),
+          visit: trans?.amount,
+        };
+      });
+      setData(newArr);
+
+      const start = transactions[0]?.date;
+      const end = transactions[transactions.length - 1]?.date;
+      setDate([new Date(start).toDateString(), new Date(end).toDateString()]);
+    }
+
+    return () => {
+      setData([]);
+      setDate([]);
+    };
+  }, []);
+
   return (
-    <div className={" h-[350px] p-5 rounded-xl"}>
+    <div className={" h-[350px] rounded-xl p-5"}>
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
           width={500}
@@ -62,10 +90,7 @@ const Chart = () => {
             bottom: 0,
           }}
         >
-          <XAxis dataKey="name" ticks={["Sun", "Sat"]} />
-          {/* <YAxis /> */}
-          {/* <Tooltip contentStyle={{ background: "#151c2c", border: "none" }} /> */}
-          {/* <Legend /> */}
+          <XAxis dataKey="name" ticks={date} />
           <Line
             type="natural"
             dataKey="visit"

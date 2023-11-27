@@ -11,8 +11,12 @@ import {
 import "react-day-picker/dist/style.css";
 import Calendar from "../calendar/Calendar";
 import { Checkbox } from "@/components/ui/checkbox";
-import { useAppStore } from "@/store/appStore";
+import { filterValuesProps, useAppStore } from "@/store/appStore";
 import { useFormik } from "formik";
+import { useTransactionStore } from "@/store/transactionStore";
+import isToday from "date-fns/isToday";
+import { getLastSevenDays, getLastThreeMonth } from "@/lib/CalenderFunction";
+import isThisMonth from "date-fns/isThisMonth";
 
 type Checked = DropdownMenuCheckboxItemProps["checked"];
 
@@ -23,6 +27,20 @@ function Filter() {
   const setIsFilterOpen = useAppStore(
     (state: { setIsFilterOpen: Function }) => state.setIsFilterOpen,
   );
+  const filterValues = useAppStore(
+    (state: { filterValues: filterValuesProps }) => state.filterValues,
+  );
+  const setFilterValues = useAppStore(
+    (state: { setFilterValues: Function }) => state.setFilterValues,
+  );
+
+  const transactions = useTransactionStore(
+    (state: { transactions: [] }) => state.transactions,
+  );
+  const setFilteredTransactions = useAppStore(
+    (state) => state.setFilteredTransactions,
+  );
+
   const filterData = ["Today", "Last 7 days", "This month", "Last 3 months"];
   const transStatus = ["Successful", "Pending", "Failed"];
   const transType = [
@@ -37,17 +55,17 @@ function Filter() {
   const [showStatus, setShowStatus] = React.useState<Boolean>(false);
   const [showCalendar, setShowCalendar] = React.useState<Boolean>(false);
   const [showCalendar2, setShowCalendar2] = React.useState<Boolean>(false);
-  const [sideDate, setSideDate] = React.useState(new Date());
-  const [sideDate2, setSideDate2] = React.useState(new Date());
+  const [sideDate] = React.useState(new Date());
+
   const [hydrate, setHydrate] = React.useState(true);
 
   const form = useFormik({
     initialValues: {
-      from: "",
-      to: "",
-      type: [],
-      status: [],
-      period: "",
+      from: filterValues?.from || "",
+      to: filterValues?.to || "",
+      type: filterValues?.type || [],
+      status: filterValues?.status || [],
+      period: filterValues?.period || "",
     },
     validate(values) {
       let errors = {};
@@ -58,11 +76,9 @@ function Filter() {
 
   const OnSelectDate = (date: Date) => {
     if (showCalendar2) {
-      setSideDate2(date);
       form.setFieldValue("to", date);
       setShowCalendar2(false);
     } else {
-      setSideDate(date);
       form.setFieldValue("from", date);
       setShowCalendar(false);
     }
@@ -71,6 +87,69 @@ function Filter() {
   useEffect(() => {
     setHydrate(false);
   }, []);
+
+  const onApply = () => {
+    setFilterValues(form.values);
+    const periodData = transactions.flatMap((data: { date: Date }, i) => {
+      if (isToday(data?.date)) return Object.assign({}, data, { id: i });
+      if (isThisMonth(data?.date)) return Object.assign({}, data, { id: i });
+      if (new Date(data?.date) >= getLastSevenDays())
+        return Object.assign({}, data, { id: i });
+      if (new Date(data?.date) >= getLastThreeMonth())
+        return Object.assign({}, data, { id: i });
+      return [];
+    });
+    const dateData = transactions.flatMap((data: { date: Date }, i) => {
+      if (form.values.from && form.values.to) {
+        if (
+          new Date(form.values.from) >= new Date(data?.date) &&
+          new Date(data?.date) <= new Date(form?.values.to)
+        )
+          return Object.assign({}, data, { id: i });
+      } else if (form.values.from && !form.values.to) {
+        if (new Date(form.values.from) >= new Date(data?.date))
+          return Object.assign({}, data, { id: i });
+      } else if (!form.values.from && form.values.to) {
+        if (new Date(data?.date) <= new Date(form?.values.to))
+          return Object.assign({}, data, { id: i });
+      } else return [];
+    });
+    const statusData = transactions.flatMap(
+      (data: { date: Date; status: String }, i) => {
+        if (
+          form.values.status.includes("Successful") &&
+          data?.status === "successful"
+        )
+          return Object.assign({}, data, { id: i });
+        if (
+          form.values.status.includes("Pending") &&
+          data?.status === "pending"
+        )
+          return Object.assign({}, data, { id: i });
+        if (form.values.status.includes("Failed") && data?.status === "failed")
+          return Object.assign({}, data, { id: i });
+        return [];
+      },
+    );
+    const typeData = transactions.flatMap(
+      (data: { date: Date; status: String; type: String }, i) => {
+        if (form.values.type.includes("Cashbacks") && data?.type === "deposit")
+          return Object.assign({}, data, { id: i });
+        if (
+          form.values.type.includes("Withdrawals") &&
+          data?.type === "withdrawal"
+        )
+          return Object.assign({}, data, { id: i });
+        return [];
+      },
+    );
+    // console.log(typeData);
+    const newData = [...periodData, ...dateData, ...statusData, ...typeData];
+    // console.log({ newData });
+    setFilteredTransactions(newData);
+    setIsFilterOpen(!isFilterOpen);
+  };
+
   if (hydrate) return <></>;
   return (
     <div
@@ -79,7 +158,7 @@ function Filter() {
       } group bottom-0 right-0 z-50 h-screen w-screen origin-right bg-transparent/90 transition-all duration-500 ease-linear `}
     >
       <div
-        className={`border-1 duration-2000 absolute bottom-4  top-4 z-50 h-[96%] w-[456px] origin-right rounded-3xl bg-white p-5 shadow-Filter backdrop-blur transition-all delay-700 ease-in-out ${
+        className={`border-1 absolute bottom-4 top-4  z-50 h-[96%] w-[456px] origin-right rounded-3xl bg-white p-5 shadow-Filter backdrop-blur transition-all delay-700 duration-2000 ease-in-out ${
           isFilterOpen ? "delay-2000 right-4" : "-right-[500px]"
         }`}
       >
@@ -214,10 +293,7 @@ function Filter() {
                     id={type}
                     checked={form.values.type.includes(type)}
                   />
-                  <label
-                    htmlFor={type}
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
+                  <label htmlFor={type} className="checkBoxLabel">
                     {type}
                   </label>
                 </div>
@@ -286,10 +362,7 @@ function Filter() {
                     id={type}
                     checked={form.values.status.includes(type)}
                   />
-                  <label
-                    htmlFor={type}
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-                  >
+                  <label htmlFor={type} className="checkBoxLabel">
                     {type}
                   </label>
                 </div>
@@ -297,15 +370,26 @@ function Filter() {
             </div>
           </div>
         </div>
-        <div className="absolute bottom-5 left-3 mx-auto flex w-[95%] gap-3">
+        <div className="btnContainer">
           <button
-            className={`h-14 w-1/2 rounded-full border border-gray100 font-semibold`}
-            onClick={() => form.resetForm()}
+            className={`btn border-gray100 font-semibold`}
+            onClick={() => {
+              setFilterValues({});
+              form.resetForm();
+            }}
           >
             Clear
           </button>
           <button
-            className={`h-14 w-1/2 rounded-full border bg-black300 text-white`}
+            disabled={
+              !form.values.from &&
+              !form.values.period &&
+              form.values.status.length === 0 &&
+              !form.values.to &&
+              form.values.type.length === 0
+            }
+            onClick={onApply}
+            className={`btn bg-black300 text-white disabled:bg-gray100`}
           >
             Apply
           </button>

@@ -1,3 +1,4 @@
+"use client";
 import {
   analytics,
   apps,
@@ -28,9 +29,8 @@ import { useAppStore } from "@/store/appStore";
 import { ChevronDown, ChevronRight, ChevronUp } from "lucide-react";
 
 function NavBar() {
-  const user = useUserStore((state) => state.user);
-
   const [hydrate, setHydrate] = React.useState(true);
+  const user = useUserStore((state) => state.user);
   const [isAppMenuOpen, setIsAppMenuOpen] = React.useState(false);
   const [isSettingMenuOpen, setIsSettingMenuOpen] = React.useState(false);
 
@@ -96,9 +96,7 @@ function NavBar() {
     setHydrate(false);
   }, []);
 
-  console.log(isSettingMenuOpen);
-
-  if (hydrate) return <></>;
+  // if (hydrate) return <></>;
 
   return (
     <div className="navContainer">
@@ -217,8 +215,8 @@ function NavBar() {
             className="flex cursor-pointer items-center gap-2 rounded-full bg-gray100 py-1 pl-1.5 pr-3"
           >
             <div className="nameCircle flex h-8 w-8 items-center justify-center rounded-full font-semibold text-white">
-              {user?.first_name?.[0]?.toUpperCase() || ""}
-              {user?.last_name?.[0]?.toUpperCase() || ""}
+              {user?.first_name?.[0]?.toUpperCase() ?? ""}
+              {user?.last_name?.[0]?.toUpperCase() ?? ""}
             </div>
             <Image src={menu} alt={"menu"} width={20} height={20} />
           </div>
