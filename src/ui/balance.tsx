@@ -40,9 +40,7 @@ function Balance() {
         <div className="flex h-[52px] gap-16">
           <div className="">
             <p>Available Balance</p>
-            <h1 className="text-h1 font-semibold">
-              USD {wallets?.balance || 0}
-            </h1>
+            <h1 className="text-h1 font-bold">USD {wallets?.balance || 0}</h1>
           </div>
           <button className="h-[52px] w-[167px] rounded-full bg-black text-white">
             Withdraw
@@ -67,7 +65,7 @@ function SideBalance({ data }: { data: { title: string; amount: string } }) {
         <h3 className="text-sm text-gray400">{data.title}</h3>
         <Image src={info} alt={`information`} width={20} height={20} />
       </div>
-      <div className="mt-1 text-h2 font-semibold text-black">{data.amount}</div>
+      <div className="mt-1 text-h2 font-bold text-black">{data.amount}</div>
     </div>
   );
 }
