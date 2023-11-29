@@ -1,4 +1,3 @@
-"use client";
 import { DayPicker } from "react-day-picker";
 import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu";
 import React, { useEffect } from "react";
@@ -14,9 +13,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { filterValuesProps, useAppStore } from "@/store/appStore";
 import { useFormik } from "formik";
 import { useTransactionStore } from "@/store/transactionStore";
-import isToday from "date-fns/isToday";
+
 import { getLastSevenDays, getLastThreeMonth } from "@/lib/CalenderFunction";
-import isThisMonth from "date-fns/isThisMonth";
+import { isThisMonth, isToday } from "date-fns";
+import { useGetTransactions } from "@/store/actions/transactionActions";
 
 type Checked = DropdownMenuCheckboxItemProps["checked"];
 
@@ -31,7 +31,7 @@ function Filter() {
     (state: { filterValues: filterValuesProps }) => state.filterValues,
   );
   const setFilterValues = useAppStore(
-    (state: { setFilterValues: Function }) => state.setFilterValues,
+    (state: { setFilterValues: any }) => state.setFilterValues,
   );
 
   const transactions = useTransactionStore(
@@ -40,7 +40,10 @@ function Filter() {
   const setFilteredTransactions = useAppStore(
     (state) => state.setFilteredTransactions,
   );
+  const setLoader = useTransactionStore((state) => state.setLoader);
+  const setTransactions = useTransactionStore((state) => state.setTransactions);
 
+  const { GetTransactions } = useGetTransactions();
   const filterData = ["Today", "Last 7 days", "This month", "Last 3 months"];
   const transStatus = ["Successful", "Pending", "Failed"];
   const transType = [
@@ -64,8 +67,8 @@ function Filter() {
       from: filterValues?.from || "",
       to: filterValues?.to || "",
       type: filterValues?.type || [],
-      status: filterValues?.status || [],
-      period: filterValues?.period || "",
+      status: filterValues?.status ?? [],
+      period: filterValues?.period ?? "",
     },
     validate(values) {
       let errors = {};
@@ -89,7 +92,14 @@ function Filter() {
   }, []);
 
   const onApply = () => {
-    setFilterValues(form.values);
+    let num = 0;
+    if (form.values.from) num += 1;
+    if (form.values.period) num += 1;
+    if (form.values.status.length > 0) num += 1;
+    if (form.values.type.length > 0) num += 1;
+    if (form.values.to) num += 1;
+
+    setFilterValues({ ...form.values, active: num });
     const periodData = transactions.flatMap((data: { date: Date }, i) => {
       if (isToday(data?.date)) return Object.assign({}, data, { id: i });
       if (isThisMonth(data?.date)) return Object.assign({}, data, { id: i });
@@ -163,7 +173,9 @@ function Filter() {
         }`}
       >
         <div className="flex items-center justify-between pb-5">
-          <h3 className="text-h3 font-bold">Filter</h3>
+          <h3 className="text-h3 font-bold">
+            Filter <span></span>
+          </h3>
           <button onClick={() => setIsFilterOpen(!isFilterOpen)} className="">
             <IoCloseSharp size={24} />
           </button>
@@ -374,8 +386,15 @@ function Filter() {
           <button
             className={`btn border-gray100 font-semibold`}
             onClick={() => {
-              setFilterValues({});
               form.resetForm();
+              setFilterValues({});
+              GetTransactions({
+                onComplete: (_: any, data: any) => {
+                  setTransactions(data);
+                  setFilteredTransactions(data);
+                },
+                setLoader,
+              });
             }}
           >
             Clear

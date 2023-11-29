@@ -7,6 +7,7 @@ export interface filterValuesProps {
   period: String;
   status: String[];
   type: String[];
+  active?: Number;
 }
 
 export const useAppStore = create<any>()(
@@ -23,7 +24,7 @@ export const useAppStore = create<any>()(
         setTransactions: (value: {}) => set({ transactions: value }),
         setFilteredTransactions: (value: {}) =>
           set({ filteredTransactions: value }),
-        setFilterValues: (value: {}) => set({ filterValues: value }),
+        setFilterValues: (value: any) => set({ filterValues: value }),
       }),
       { name: "AppStore" },
     ),

@@ -1,96 +1,64 @@
 "use client";
-import { useTransactionStore } from "@/store/transactionStore";
+import { useAppStore } from "@/store/appStore";
+import compareDesc from "date-fns/compareDesc";
 import React from "react";
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
-
-const data = [
-  {
-    name: "Sun",
-    visit: 500,
-    click: 2400,
-  },
-  {
-    name: "Mon",
-    visit: 3000,
-    click: 1398,
-  },
-  {
-    name: "Tue",
-    visit: 2900,
-    click: 3800,
-  },
-  {
-    name: "Wed",
-    visit: 1080,
-    click: 3908,
-  },
-  {
-    name: "Thu",
-    visit: 1090,
-    click: 4800,
-  },
-  {
-    name: "Fri",
-    visit: 2390,
-    click: 3800,
-  },
-  {
-    name: "Sat",
-    visit: 3490,
-    click: 4300,
-  },
-];
+import { LineChart, Line, XAxis, ResponsiveContainer } from "recharts";
 
 const Chart = () => {
   const [date, setDate] = React.useState([]);
-  const transactions = useTransactionStore(
-    (state: { transactions: any[] }) => state.transactions,
+
+  const filteredTransactions = useAppStore(
+    (state: { filteredTransactions: any[] }) => state.filteredTransactions,
   );
   const [data, setData] = React.useState([]);
   React.useEffect(() => {
-    if (transactions.length) {
-      const newArr = transactions.map((trans: any) => {
-        return {
-          name: new Date(trans?.date).toDateString(),
-          visit: trans?.amount,
-        };
-      });
+    if (filteredTransactions.length > 0) {
+      const newArr = filteredTransactions
+        .sort((a, b) => compareDesc(new Date(b.date), new Date(a.date)))
+        .map((trans: any) => {
+          return {
+            name: new Date(trans?.date).toDateString(),
+            visit: Number(trans?.amount),
+          };
+        });
+      console.log({ newArr });
       setData(newArr);
 
-      const start = transactions[0]?.date;
-      const end = transactions[transactions.length - 1]?.date;
+      const start = filteredTransactions[0]?.date;
+      const end = filteredTransactions[filteredTransactions.length - 1]?.date;
       setDate([new Date(start).toDateString(), new Date(end).toDateString()]);
+    } else {
+      setData([
+        { visit: 0, name: "0" },
+        { visit: 0, name: "1" },
+      ]);
     }
 
     return () => {
       setData([]);
       setDate([]);
     };
-  }, []);
+  }, [filteredTransactions]);
 
   return (
-    <div className={" h-[350px] rounded-xl p-5"}>
+    <div className={"mt-4 h-[350px] rounded-xl p-5"}>
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
-          width={500}
+          width={300}
           height={300}
           data={data}
           margin={{
             top: 0,
-            right: 30,
-            left: 20,
+            right: 20,
+            left: 30,
             bottom: 0,
           }}
         >
-          <XAxis dataKey="name" ticks={date} />
+          <XAxis
+            dataKey={data.length > 0 ? "name" : ""}
+            domain={["dataMin", "dataMax"]}
+            ticks={date}
+          />
           <Line
             type="natural"
             dataKey="visit"

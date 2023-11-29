@@ -1,4 +1,3 @@
-"use client";
 import {
   analytics,
   apps,
@@ -27,6 +26,7 @@ import {
 } from "react-icons/md";
 import { useAppStore } from "@/store/appStore";
 import { ChevronDown, ChevronRight, ChevronUp } from "lucide-react";
+import dynamic from "next/dynamic";
 
 function NavBar() {
   const [hydrate, setHydrate] = React.useState(true);
@@ -267,4 +267,4 @@ function NavBar() {
   );
 }
 
-export default NavBar;
+export default dynamic(() => Promise.resolve(NavBar), { ssr: false });

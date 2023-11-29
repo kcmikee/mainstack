@@ -34,7 +34,7 @@ function Transactions() {
   //   }
   // }, [filterValues, transactions]);
 
-  console.log({ transactions });
+  console.log({ filterValues: filterValues });
 
   useEffect(() => {
     setHydrate(false);
@@ -54,12 +54,18 @@ function Transactions() {
         <div className="flex items-center space-x-3">
           <button
             onClick={() => setIsFilterOpen(!isFilterOpen)}
-            className="flex items-center gap-2 rounded-full bg-gray100 py-3 pl-8 pr-5 font-semibold"
+            className="flex items-center gap-2 rounded-full bg-gray100 py-3 pl-8 pr-5 font-medium"
           >
-            Filter
+            Filter{" "}
+            {filterValues?.active && (
+              <div className="flex h-5 w-5 items-center justify-center rounded-full bg-black300 text-xs text-white">
+                {/* @ts-ignore */}
+                {filterValues?.active}
+              </div>
+            )}
             <FiChevronDown color="#131313" />
           </button>
-          <button className="flex items-center gap-2 rounded-full bg-gray100 py-3 pl-8 pr-5 font-semibold">
+          <button className="flex items-center gap-2 rounded-full bg-gray100 py-3 pl-8 pr-5 font-medium">
             Export list
             <HiOutlineDownload color="#131313" />
           </button>
@@ -113,8 +119,8 @@ function TransactionsDetail({ data }) {
         </div>
       </div>
       <div>
-        <p className="text-base font-bold">USD {data?.amount}</p>
-        <p className="text-sm font-normal text-gray400">
+        <p className="text-right text-base font-bold">USD {data?.amount}</p>
+        <p className="text-right text-sm font-normal text-gray400">
           {data?.date && new Date(data?.date).toDateString()}
         </p>
       </div>
