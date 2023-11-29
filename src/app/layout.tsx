@@ -21,11 +21,6 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <style jsx global>{`
-        html {
-          font-family: ${bricolage.style.fontFamily};
-        }
-      `}</style>
       <body className={bricolage.className}>{children}</body>
     </html>
   );
