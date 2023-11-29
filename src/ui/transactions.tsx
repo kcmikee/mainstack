@@ -44,7 +44,7 @@ function Transactions() {
     <div className="mt-20  border-gray50">
       <div className="flex items-center justify-between border-b pb-5">
         <div>
-          <h4 className="text-h3 font-bold">
+          <h4 className="text-h3 font-semibold">
             {filteredTransactions?.length} Transactions
           </h4>
           <p className="text-sm text-gray400">
@@ -84,7 +84,10 @@ export default Transactions;
 
 function TransactionsDetail({ data }) {
   return (
-    <div className="flex h-12 items-center justify-between">
+    <div
+      role="transactionDetails"
+      className="flex h-12 items-center justify-between"
+    >
       <div className="flex gap-3.5">
         <div
           className={`flex h-12 w-12 items-center justify-center rounded-full ${
@@ -119,7 +122,7 @@ function TransactionsDetail({ data }) {
         </div>
       </div>
       <div>
-        <p className="text-right text-base font-bold">USD {data?.amount}</p>
+        <p className="text-right text-base font-semibold">USD {data?.amount}</p>
         <p className="text-right text-sm font-normal text-gray400">
           {data?.date && new Date(data?.date).toDateString()}
         </p>

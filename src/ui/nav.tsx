@@ -29,8 +29,7 @@ import { ChevronDown, ChevronRight, ChevronUp } from "lucide-react";
 import dynamic from "next/dynamic";
 
 function NavBar() {
-  const [hydrate, setHydrate] = React.useState(true);
-  const user = useUserStore((state) => state.user);
+  const user = useUserStore((state) => state.user) || {};
   const [isAppMenuOpen, setIsAppMenuOpen] = React.useState(false);
   const [isSettingMenuOpen, setIsSettingMenuOpen] = React.useState(false);
 
@@ -92,20 +91,20 @@ function NavBar() {
     },
   ];
 
-  useEffect(() => {
-    setHydrate(false);
-  }, []);
-
   // if (hydrate) return <></>;
 
   return (
     <div className="navContainer">
       <Image src={logo} alt="mainstack" width={36} height={36} />
-      <nav className="flex items-center gap-5 ">
+      <nav role="nav" className="flex items-center gap-5 ">
         {navigation.map((nav, i) => {
           if (nav.title === "Revenue") {
             return (
-              <div key={i + nav.title} className="navItem bg-black300">
+              <div
+                data-testid="navId"
+                key={i + nav.title}
+                className="navItem bg-black300"
+              >
                 <Image src={nav.icon} alt={nav.title} width={20} height={20} />
                 <h6 className="navTitle text-white">{nav.title}</h6>
               </div>

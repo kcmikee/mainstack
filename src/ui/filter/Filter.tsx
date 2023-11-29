@@ -154,10 +154,17 @@ function Filter() {
       },
     );
     // console.log(typeData);
+
     const newData = [...periodData, ...dateData, ...statusData, ...typeData];
-    // console.log({ newData });
-    setFilteredTransactions(newData);
+    const unique = new Map(newData.map((m: { id: any }) => [m.id, m]));
+
+    // @ts-ignore
+    setFilteredTransactions([...unique.values()]);
     setIsFilterOpen(!isFilterOpen);
+    setShowType(false);
+    setShowStatus(false);
+    setShowCalendar(false);
+    setShowCalendar2(false);
   };
 
   if (hydrate) return <></>;
@@ -165,7 +172,7 @@ function Filter() {
     <div
       className={`${
         isFilterOpen ? "fixed" : "hidden"
-      } group bottom-0 right-0 z-50 h-screen w-screen origin-right bg-transparent/90 transition-all duration-500 ease-linear `}
+      } group bottom-0 right-0 z-50 h-screen w-screen origin-right bg-transparent/50 transition-all duration-500 ease-linear `}
     >
       <div
         className={`border-1 absolute bottom-4 top-4  z-50 h-[96%] w-[456px] origin-right rounded-3xl bg-white p-5 shadow-Filter backdrop-blur transition-all delay-700 duration-2000 ease-in-out ${
@@ -173,7 +180,7 @@ function Filter() {
         }`}
       >
         <div className="flex items-center justify-between pb-5">
-          <h3 className="text-h3 font-bold">
+          <h3 className="text-h3 font-semibold">
             Filter <span></span>
           </h3>
           <button onClick={() => setIsFilterOpen(!isFilterOpen)} className="">
@@ -254,7 +261,12 @@ function Filter() {
 
         {/* Transaction dropdown */}
         <div className="mt-6">
-          <h3 className="mb-3 font-semibold text-black300">Transaction Type</h3>
+          <h3
+            data-testid="filtertype"
+            className="mb-3 font-semibold text-black300"
+          >
+            Transaction Type
+          </h3>
           <div className="relative">
             <div>
               <button
@@ -313,7 +325,7 @@ function Filter() {
             </div>
           </div>
         </div>
-        <div className="mt-6">
+        <div role="filter-status" className="mt-6">
           <h3 className="mb-3 font-semibold text-black300">
             Transaction Status
           </h3>

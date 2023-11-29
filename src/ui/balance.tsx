@@ -37,12 +37,14 @@ function Balance() {
   return (
     <div className="mt-16 flex gap-[124px]">
       <div className="w-full">
-        <div className="flex items-center gap-16">
+        <div className="flex  gap-16">
           <div className="">
             <p>Available Balance</p>
-            <h1 className="text-h1 font-bold">USD {wallets?.balance || 0}</h1>
+            <h1 className="text-h1 font-semibold">
+              USD {wallets?.balance || 0}
+            </h1>
           </div>
-          <button className="rounded-full bg-black px-7 py-3.5 text-white">
+          <button className="rounded-full bg-black px-7 py-3 text-white">
             Withdraw
           </button>
         </div>
@@ -61,11 +63,11 @@ export default dynamic(() => Promise.resolve(Balance), { ssr: false });
 function SideBalance({ data }: { data: { title: string; amount: string } }) {
   return (
     <div>
-      <div className="flex items-center justify-between">
+      <div className="flex justify-between">
         <h3 className="text-sm text-gray400">{data.title}</h3>
         <Image src={info} alt={`information`} width={20} height={20} />
       </div>
-      <div className="mt-2 text-h2 font-black text-black">{data.amount}</div>
+      <div className="mt-1 text-h2 font-semibold text-black">{data.amount}</div>
     </div>
   );
 }

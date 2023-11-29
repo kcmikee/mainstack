@@ -10,9 +10,12 @@ import React from "react";
 function SideOptions() {
   const icons = [ProductIcon, ProductIcon2, ProductIcon3, ProductIcon4];
   return (
-    <div className="sticky  top-3/7 left-4 inline-block p-1 items-start shadow-AppBar rounded-full bg-white h-min">
+    <div
+      data-testid="testId"
+      className="fixed left-4 top-3/7 inline-block h-min items-start rounded-full bg-white p-1 shadow-AppBar"
+    >
       {icons.map((icon, i) => (
-        <div key={i} className="p-2 grayscale hover:grayscale-0 cursor-pointer">
+        <div key={i} className="cursor-pointer p-2 grayscale hover:grayscale-0">
           <Image src={icon} alt="side-nav" width={24} height={24} />
         </div>
       ))}
