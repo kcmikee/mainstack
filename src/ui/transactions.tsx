@@ -107,7 +107,7 @@ function TransactionsDetail({ data }) {
               : data?.metadata?.product_name || "Cash Deposit"}
           </p>
           <p
-            className={`text-sm font-normal  ${
+            className={`text-sm font-medium  ${
               data?.type === "withdrawal" && data?.status === "successful"
                 ? "text-green-500"
                 : data?.type === "withdrawal" && data?.status === "pending"
@@ -122,7 +122,7 @@ function TransactionsDetail({ data }) {
         </div>
       </div>
       <div>
-        <p className="text-right text-base font-semibold">USD {data?.amount}</p>
+        <p className="text-right text-base font-bold">USD {data?.amount}</p>
         <p className="text-right text-sm font-normal text-gray400">
           {data?.date && new Date(data?.date).toDateString()}
         </p>

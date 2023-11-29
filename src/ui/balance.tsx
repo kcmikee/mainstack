@@ -37,14 +37,14 @@ function Balance() {
   return (
     <div className="mt-16 flex gap-[124px]">
       <div className="w-full">
-        <div className="flex  gap-16">
+        <div className="flex h-[52px] gap-16">
           <div className="">
             <p>Available Balance</p>
             <h1 className="text-h1 font-semibold">
               USD {wallets?.balance || 0}
             </h1>
           </div>
-          <button className="rounded-full bg-black px-7 py-3 text-white">
+          <button className="h-[52px] w-[167px] rounded-full bg-black text-white">
             Withdraw
           </button>
         </div>

@@ -41,7 +41,7 @@ const Chart = () => {
   }, [filteredTransactions]);
 
   return (
-    <div className={"mt-4 h-[350px] rounded-xl p-5"}>
+    <div className={"mt-6 h-[350px] rounded-xl p-5"}>
       <ResponsiveContainer width="100%" height="100%">
         <LineChart
           width={300}
